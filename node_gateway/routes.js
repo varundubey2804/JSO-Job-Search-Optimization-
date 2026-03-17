@@ -5,7 +5,9 @@ const multer = require('multer');
 const FormData = require('form-data');
 
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:8000';
-const upload = multer({ dest: 'uploads/' }); // Temp storage for proxying file uploads
+// Ensure uploads directory exists or use memory storage.
+// We'll use memory storage to avoid file system dependency.
+const upload = multer({ storage: multer.memoryStorage() }); // Temp storage for proxying file uploads
 
 // Common helper to proxy requests to FastAPI backend
 async function proxyRequest(req, res, method, urlPath, data = null, headers = {}) {
@@ -32,7 +34,7 @@ async function proxyRequest(req, res, method, urlPath, data = null, headers = {}
         res.status(response.status).json(response.data);
     } catch (error) {
         if (error.response) {
-            res.status(error.response.status).json(error.response.data);
+            res.status(error.response.status).json(error.response.data || { detail: "Unknown error from backend" });
         } else {
             console.error('Error forwarding request:', error.message);
             res.status(500).json({ error: 'Internal Gateway Error' });
@@ -51,10 +53,9 @@ router.post('/extract-skills', upload.single('file'), async (req, res) => {
             return res.status(400).json({ detail: "No file uploaded" });
         }
 
-        // We use fs and form-data to forward the file to the python backend
-        const fs = require('fs');
+        // We use form-data to forward the file buffer to the python backend
         const form = new FormData();
-        form.append('file', fs.createReadStream(req.file.path), req.file.originalname);
+        form.append('file', req.file.buffer, req.file.originalname);
         
         let headers = {
             ...form.getHeaders()
@@ -67,17 +68,10 @@ router.post('/extract-skills', upload.single('file'), async (req, res) => {
 
         const response = await axios.post(`${BACKEND_URL}/api/extract-skills`, form, { headers: headers });
         
-        // Clean up temp file
-        fs.unlinkSync(req.file.path);
-
         res.status(response.status).json(response.data);
     } catch (error) {
-        if (req.file) {
-            const fs = require('fs');
-            if(fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
-        }
         if (error.response) {
-            res.status(error.response.status).json(error.response.data);
+            res.status(error.response.status).json(error.response.data || { detail: "Unknown error from backend" });
         } else {
             console.error('Error forwarding file request:', error.message);
             res.status(500).json({ error: 'Internal Gateway Error' });

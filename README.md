@@ -12,11 +12,11 @@ graph TD
     C -->|JobAgentOrchestrator| E[Query Generator Agent]
     C -->|JobAgentOrchestrator| F[Platform Adapter Agent]
     
-    D --> G[Groq / Google AI LLM]
+    D --> G[Groq LLM (Via API)]
     E --> G
     
     C --> H[(Supabase PostgreSQL Database)]
-    C --> I[AWS S3 Resume Storage]
+    C --> I[Supabase Resume Storage]
 ```
 
 ## Supported Platforms
@@ -40,7 +40,7 @@ graph TD
 2. Create a virtual environment: `python3 -m venv venv`
 3. Activate the environment: `source venv/bin/activate`
 4. Install dependencies: `pip install -r requirements.txt`
-5. Configure `.env` file with your Groq/Google AI API keys (or rely on the built-in mock fallback).
+5. Configure `.env` file with your Groq API keys and base url (`GROQ_API_KEY`, `GROQ_BASE_URL`) (or rely on the built-in mock fallback).
 6. Run the server: `cd backend && python3 app.py` (Runs on port 8000).
 
 ### 2. API Gateway (NodeJS)
@@ -58,5 +58,5 @@ graph TD
 - **Frontend**: Vercel (serves the static HTML/CSS/JS)
 - **Backend (API Gateway & Python Service)**: Docker container hosted on AWS/GCP or Render/Railway.
 - **Database**: Supabase (PostgreSQL)
-- **File Storage**: AWS S3
-- **AI Models**: Groq or Google AI
+- **File Storage**: Supabase Storage
+- **AI Models**: Groq LLM

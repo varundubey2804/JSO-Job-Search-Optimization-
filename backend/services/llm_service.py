@@ -17,11 +17,16 @@ except ImportError:
 class LLMService:
     def __init__(self):
         self.api_key = os.getenv("GROQ_API_KEY", "")
+        self.base_url = os.getenv("GROQ_BASE_URL", "")
+        self.model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
         self.use_mock = not bool(self.api_key) or not GROQ_AVAILABLE
 
         if not self.use_mock:
             try:
-                self.client = Groq(api_key=self.api_key)
+                if self.base_url:
+                    self.client = Groq(api_key=self.api_key, base_url=self.base_url)
+                else:
+                    self.client = Groq(api_key=self.api_key)
                 logger.info("Groq client initialized successfully")
             except Exception as e:
                 logger.warning(f"Groq init failed: {e}. Using mock responses.")
@@ -55,7 +60,7 @@ class LLMService:
             })
 
             request_payload = {
-                "model": "llama3-70b-8192",
+                "model": self.model,
                 "messages": messages,
                 "temperature": 0.2
             }

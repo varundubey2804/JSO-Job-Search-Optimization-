@@ -4,9 +4,10 @@ from api.routes import router
 import logging
 from dotenv import load_dotenv
 import os
+from dotenv import find_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv(find_dotenv())
 
 # Logger setup
 logging.basicConfig(level=logging.INFO)
