@@ -21,11 +21,20 @@ async function fetchAPI(endpoint, options = {}) {
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (e) {
+            errorData = { detail: 'API request failed with unexpected response' };
+        }
         throw new Error(errorData.detail || 'API request failed');
     }
 
-    return response.json();
+    try {
+        return await response.json();
+    } catch (e) {
+        throw new Error('Unexpected end of JSON input or invalid response');
+    }
 }
 
 const api = {
