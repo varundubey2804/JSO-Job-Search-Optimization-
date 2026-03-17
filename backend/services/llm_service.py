@@ -18,7 +18,7 @@ class LLMService:
     def __init__(self):
         self.api_key = os.getenv("GROQ_API_KEY", "")
         self.base_url = os.getenv("GROQ_BASE_URL", "")
-        self.model = os.getenv("GROQ_MODEL", "llama3-70b-8192")
+        self.model = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
         self.use_mock = not bool(self.api_key) or not GROQ_AVAILABLE
 
         if not self.use_mock:
