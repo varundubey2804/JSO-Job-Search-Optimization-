@@ -52,13 +52,16 @@ async def extract_skills(file: UploadFile = File(...), user: dict = Depends(requ
     logger.info(f"User {user['user_id']} uploading resume for skill extraction")
     try:
         content = await file.read()
-        text_content = content.decode('utf-8') # Simplification for prototype: expects text/plain.
-        
+        try:
+            text_content = content.decode('utf-8') # Simplification for prototype: expects text/plain.
+        except UnicodeDecodeError:
+            text_content = content.decode('utf-8', errors='ignore') # Ignore decode errors for binary files in prototype
+            
         skills = job_agent.extract_skills_from_resume(text_content)
         return ExtractedSkillsResponse(skills=skills)
     except Exception as e:
         logger.error(f"Error extracting skills: {e}")
-        raise HTTPException(status_code=500, detail="Failed to extract skills")
+        raise HTTPException(status_code=500, detail=f"Failed to extract skills: {str(e)}")
 
 
 @router.get("/query-history", response_model=QueryHistoryResponse)

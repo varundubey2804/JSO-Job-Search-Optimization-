@@ -15,17 +15,42 @@ async function fetchAPI(endpoint, options = {}) {
         ...options.headers
     };
 
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
+    try {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            ...options,
+            headers
+        });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'API request failed');
+        // 1. Check if the response is OK (200-299)
+        if (!response.ok) {
+            // 2. Read the raw text first before trying to parse JSON
+            const rawText = await response.text();
+            
+            console.error(`[API Error] HTTP ${response.status} on ${endpoint}`);
+            console.error("[Raw Response Body]:", rawText);
+
+            let errorMessage = `API Error ${response.status}`;
+            
+            // 3. Try to parse it as JSON to extract a specific detail message
+            try {
+                const errorData = JSON.parse(rawText);
+                if (errorData.detail) errorMessage = errorData.detail;
+                else if (errorData.error) errorMessage = errorData.error;
+            } catch (e) {
+                // If it's not JSON (like an HTML error page), show a snippet of the raw text
+                errorMessage = `Server Error. Check console. Snippet: ${rawText.substring(0, 100)}...`;
+            }
+
+            throw new Error(errorMessage);
+        }
+
+        // 4. If OK, parse and return JSON
+        return await response.json();
+
+    } catch (error) {
+        console.error("Fetch API caught an error:", error);
+        throw error; // Re-throw so the UI can display it
     }
-
-    return response.json();
 }
 
 const api = {
@@ -43,7 +68,6 @@ const api = {
         return fetchAPI('/extract-skills', {
             method: 'POST',
             body: formData,
-            // Don't set Content-Type here, let fetch handle the multipart/form-data boundary
         });
     },
 
