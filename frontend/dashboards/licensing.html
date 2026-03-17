@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSO Agent - Licensing Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="dark">
+
+    <aside class="sidebar glass-card">
+        <div class="logo"><i class="fas fa-robot"></i> JSO Agent</div>
+        <nav>
+            <a href="user.html" class="nav-link"><i class="fas fa-user"></i> Job Seeker</a>
+            <a href="hr.html" class="nav-link"><i class="fas fa-briefcase"></i> HR Consultant</a>
+            <a href="admin.html" class="nav-link"><i class="fas fa-chart-line"></i> Admin</a>
+            <a href="licensing.html" class="nav-link active"><i class="fas fa-certificate"></i> Licensing</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1>Licensing Management</h1>
+            <button class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></button>
+        </header>
+
+        <section class="glass-card">
+            <h2>Organization Registration</h2>
+            <form id="org-form">
+                <div class="dashboard-grid">
+                    <div class="form-group">
+                        <label for="org-name">Organization Name</label>
+                        <input type="text" id="org-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="license-type">License Type</label>
+                        <select id="license-type" required>
+                            <option value="Basic">Basic (100 queries/mo)</option>
+                            <option value="Pro">Pro (1,000 queries/mo)</option>
+                            <option value="Enterprise">Enterprise (Unlimited)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" onclick="alert('Mock: Organization Registered')">
+                    <i class="fas fa-plus"></i> Register Organization
+                </button>
+            </form>
+        </section>
+
+        <section class="glass-card">
+            <h2>Active Licenses</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Organization</th>
+                        <th>License Type</th>
+                        <th>Query Usage</th>
+                        <th>Billing Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="licenses-body">
+                    <!-- Static Mock Data for prototype -->
+                    <tr>
+                        <td>TechCorp India</td>
+                        <td>Enterprise</td>
+                        <td>4,520 / Unlimited</td>
+                        <td style="color: var(--secondary-color);">Active</td>
+                        <td><button style="padding: 5px 10px; font-size: 0.8rem;">Manage</button></td>
+                    </tr>
+                    <tr>
+                        <td>StartupX</td>
+                        <td>Basic</td>
+                        <td>85 / 100</td>
+                        <td style="color: var(--secondary-color);">Active</td>
+                        <td><button style="padding: 5px 10px; font-size: 0.8rem;">Manage</button></td>
+                    </tr>
+                    <tr>
+                        <td>Global Recruiters</td>
+                        <td>Pro</td>
+                        <td>1,000 / 1,000</td>
+                        <td style="color: red;">Suspended</td>
+                        <td><button style="padding: 5px 10px; font-size: 0.8rem;">Manage</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/licensing.js"></script>
+</body>
+</html>

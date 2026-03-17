@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSO Agent - HR Consultant Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body data-theme="dark">
+
+    <aside class="sidebar glass-card">
+        <div class="logo"><i class="fas fa-robot"></i> JSO Agent</div>
+        <nav>
+            <a href="user.html" class="nav-link"><i class="fas fa-user"></i> Job Seeker</a>
+            <a href="hr.html" class="nav-link active"><i class="fas fa-briefcase"></i> HR Consultant</a>
+            <a href="admin.html" class="nav-link"><i class="fas fa-chart-line"></i> Admin</a>
+            <a href="licensing.html" class="nav-link"><i class="fas fa-certificate"></i> Licensing</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <h1>HR Consultant Dashboard</h1>
+            <button class="theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i></button>
+        </header>
+
+        <section class="glass-card">
+            <h2>Add Candidate Profile</h2>
+            <form id="candidate-form">
+                <div class="dashboard-grid">
+                    <div class="form-group">
+                        <label for="candidate-name">Candidate Name</label>
+                        <input type="text" id="candidate-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resume-upload">Upload Resume (.txt for prototype)</label>
+                        <input type="file" id="resume-upload" accept=".txt">
+                    </div>
+                </div>
+                <button type="submit" id="extract-btn">
+                    <i class="fas fa-file-upload"></i> Extract Skills & Add
+                </button>
+                <div id="loading" class="spinner hidden" style="margin-left: 10px; vertical-align: middle;"></div>
+            </form>
+        </section>
+
+        <section class="glass-card">
+            <h2>Candidate Management</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Extracted Skills</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="candidates-table-body">
+                    <!-- Dynamic content -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/hr.js"></script>
+</body>
+</html>
