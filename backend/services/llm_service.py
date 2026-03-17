@@ -6,30 +6,30 @@ from typing import Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Check OpenAI (Proxy LLM) availability
+# Check Groq availability
 try:
-    from openai import OpenAI
-    OPENAI_AVAILABLE = True
+    from groq import Groq
+    GROQ_AVAILABLE = True
 except ImportError:
-    OPENAI_AVAILABLE = False
+    GROQ_AVAILABLE = False
 
 
 class LLMService:
     def __init__(self):
-        self.api_key = os.getenv("PROXY_API_KEY", "")
-        self.base_url = os.getenv("PROXY_BASE_URL", "")
-        self.model = os.getenv("PROXY_MODEL", "llama3-70b-8192")
-        self.use_mock = not bool(self.api_key) or not OPENAI_AVAILABLE
+        self.api_key = os.getenv("GROQ_API_KEY", "")
+        self.base_url = os.getenv("GROQ_BASE_URL", "")
+        self.model = os.getenv("GROQ_MODEL", "llama3-70b-8192")
+        self.use_mock = not bool(self.api_key) or not GROQ_AVAILABLE
 
         if not self.use_mock:
             try:
                 if self.base_url:
-                    self.client = OpenAI(api_key=self.api_key, base_url=self.base_url)
+                    self.client = Groq(api_key=self.api_key, base_url=self.base_url)
                 else:
-                    self.client = OpenAI(api_key=self.api_key)
-                logger.info("Proxy LLM client initialized successfully")
+                    self.client = Groq(api_key=self.api_key)
+                logger.info("Groq client initialized successfully")
             except Exception as e:
-                logger.warning(f"Proxy LLM init failed: {e}. Using mock responses.")
+                logger.warning(f"Groq init failed: {e}. Using mock responses.")
                 self.use_mock = True
 
     def generate_completion(
